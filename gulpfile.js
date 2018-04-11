@@ -29,7 +29,7 @@ var config = {
         dist: './dist',
         mainJs: './src/main.js' // mainJs
     }
-}
+};
 
 // start a local development server, name of the gulp task is connect
 gulp.task('connect', function() {
@@ -55,7 +55,7 @@ gulp.task('html', function(){
 });
 
 gulp.task('js', function(){
-    browserify(config.paths.MainJs)
+    browserify(config.paths.mainJs)
         .transform(reactify) // transform js
         .bundle() // put it all in one file
         .on('error', console.error.bind(console))

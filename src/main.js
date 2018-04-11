@@ -1,6 +1,7 @@
-// need to be defined globaly as bootstrap expects it here
 $ = jQuery = require('jquery');
+var React = require('react');
+var Home = require('./components/homePage');
 
-var App = console.log('Hello world from Browserify');
-
-module.exports = App;
+// get our home page component and attach it to app element on
+// the main page
+React.render(<Home />, document.getElementById('app'));
