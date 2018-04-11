@@ -13,6 +13,9 @@ var source = require('vinyl-source-stream'); // Use conventional text stream wit
 // Bootstrap
 var concat = require('gulp-concat'); // concatenate files
 
+// ESLint
+var eslint  = require('gulp-eslint'); // Lint JS files, including JSX
+
 var config = {
     port: 9005,
     devBaseUrl: 'http:localhost',
@@ -69,8 +72,14 @@ gulp.task('css', function() {
 
 gulp.task('watch', function() {
     gulp.watch(config.paths.html, ['html']);
-    gulp.watch(config.paths.js, ['js']); // watch java script files
+    gulp.watch(config.paths.js, ['js', 'lint']); // watch java script files
+});
+
+gulp.task('lint', function (){
+    return gulp.src(config.paths.js)
+    .pipe(eslint({config: 'eslint.config.json'}))
+    .pipe(eslint.format());
 });
 
 // run multiple tasks with default one
-gulp.task('default', ['html', 'js', 'css', 'open', 'watch']);
+gulp.task('default', ['html', 'js', 'css', 'lint', 'open', 'watch']);
