@@ -22,6 +22,7 @@ var config = {
     paths: {
         html: './src/*.html',
         js: './src/**/*.js',
+        images: './src/images/*',
         css: [ // bootstrap
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
             'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'            
@@ -64,9 +65,20 @@ gulp.task('js', function(){
         .pipe(connect.reload());
 });
 
+gulp.task('images', function() {
+    gulp.src(config.paths.images)
+        .pipe(gulp.dest(config.paths.dist + '/images'))
+        .pipe(connect.reload());
+
+        
+    //publish favicon
+    gulp.src('./src/favicon.ico')
+    .pipe(gulp.dest(config.paths.dist));
+});
+
+
 gulp.task('css', function() {
     gulp.src(config.paths.css)
-        .pipe(concat('bundle.css'))
         .pipe(gulp.dest(config.paths.dist + '/css'));
 });
 
@@ -82,4 +94,4 @@ gulp.task('lint', function (){
 });
 
 // run multiple tasks with default one
-gulp.task('default', ['html', 'js', 'css', 'lint', 'open', 'watch']);
+gulp.task('default', ['html', 'js', 'images', 'css', 'lint', 'open', 'watch']);
