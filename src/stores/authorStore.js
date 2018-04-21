@@ -10,26 +10,25 @@ var CHANGE_EVENT = 'change';
 var _authors = [];
 
 var AuthorStore = assign({}, EventEmitter.prototype, {
-    addChangeListener: function(callback) {
-        this.on(CHANGE_EVENT, callback);
-    },
+	addChangeListener: function(callback) {
+		this.on(CHANGE_EVENT, callback);
+	},
 
-    removeChangeListener: function(callback) {
-        this.removeChangeListener(CHANGE_EVENT, callback);
-    },
+	removeChangeListener: function(callback) {
+		this.removeListener(CHANGE_EVENT, callback);
+	},
 
-    emitChange: function() {
-        this.emit(CHANGE_EVENT);
-    },
-    //get all authors
-    getAllAuthors: function() {
-        return _authors;
-    },
-    //get suthor by id
-    getAuthorById: function(id) {
-        return _.find(_authors, {id: id});
-    }
+	emitChange: function() {
+		this.emit(CHANGE_EVENT);
+	},
 
+	getAllAuthors: function() {
+		return _authors;
+	},
+
+	getAuthorById: function(id) {
+		return _.find(_authors, {id: id});
+	}
 });
 
 Dispatcher.register(function(action){
@@ -48,6 +47,14 @@ Dispatcher.register(function(action){
             _authors.splice(existingAuthorIndex, 1, action.author);
             AuthorStore.emitChange();
             break;
+        case ActionTypes.DELETE_AUTHOR:
+            _.remove(_authors, function(author) {
+				return action.id === author.id;
+			});
+			AuthorStore.emitChange();
+			break;
+		default:
+			// no op
     }
 });
 
