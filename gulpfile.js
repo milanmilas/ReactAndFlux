@@ -25,7 +25,8 @@ var config = {
         images: './src/images/*',
         css: [ // bootstrap
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
-            'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'            
+            'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
+            'node_modules/toastr/toastr.css'
         ],
         dist: './dist',
         mainJs: './src/main.js' // mainJs
@@ -79,6 +80,7 @@ gulp.task('images', function() {
 
 gulp.task('css', function() {
     gulp.src(config.paths.css)
+        .pipe(concat('bundle.css'))
         .pipe(gulp.dest(config.paths.dist + '/css'));
 });
 
