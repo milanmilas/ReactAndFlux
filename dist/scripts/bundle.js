@@ -38162,6 +38162,15 @@ var AuthorActions = {
             actionType: ActionTypes.CREATE_AUTHOR,
             author: newAuthor
         });
+    },
+
+    updateAuthor: function(author) {
+        var updatedAuthor = AuthorApi.saveAuthor(author);
+
+        Dispatcher.dispatch({
+            actionType: ActionTypes.UPDATE_AUTHOR,
+            author: updatedAuthor
+        });
     }
 };
 
@@ -38509,9 +38518,13 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
 			return;
 		}
 
-		AuthorAction.createAuthor(this.state.author);
-		//AuthorApi.saveAuthor(this.state.author);
-		this.setState({dirty: false}); //reset dirty
+		if(this.state.author.id){
+			AuthorAction.updateAuthor(this.state.author);
+		}else{
+			AuthorAction.createAuthor(this.state.author);
+		}
+
+		this.setState({dirty: false});
 		toastr.success('Author saved.');
 		this.transitionTo('authors');
 	},
@@ -38644,7 +38657,8 @@ var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
     INITIALIZE: null,
-    CREATE_AUTHOR: null
+    CREATE_AUTHOR: null,
+    UPDATE_AUTHOR: null
 });
 
 },{"react/lib/keyMirror":187}],219:[function(require,module,exports){
@@ -38729,12 +38743,18 @@ var AuthorStore = assign({}, EventEmitter.prototype, {
 
 Dispatcher.register(function(action){
     switch(action.actionType) {
+        case ActionTypes.INITIALIZE:
+            _authors = action.initialData.authors;
+            AuthorStore.emitChange();
+            break;
         case ActionTypes.CREATE_AUTHOR:
             _authors.push(action.author);
             AuthorStore.emitChange();
             break;
-        case ActionTypes.INITIALIZE:
-            _authors = action.initialData.authors;
+        case ActionTypes.UPDATE_AUTHOR:
+            var existingAuthor = _.find(_authors, {id: action.author.id});
+            var existingAuthorIndex = _.indexOf(_authors, existingAuthor);
+            _authors.splice(existingAuthorIndex, 1, action.author);
             AuthorStore.emitChange();
             break;
     }
